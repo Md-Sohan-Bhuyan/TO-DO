@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Advanced To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fas fa-check-circle"></i> TO DO LIST</h1>
+                <button id="theme-toggle" class="btn-icon">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-section">
+                    <h3>Overview</h3>
+                    <ul>
+                        <li class="active"><a href="#"><i class="fas fa-tasks"></i> All Tasks</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-day"></i> Today</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-week"></i> Upcoming</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-alt"></i> Current Week</a></li>
+                        <li><a href="#"><i class="fas fa-exclamation-circle"></i> Prioritized</a></li>
+                        <li><a href="#"><i class="fas fa-clock"></i> Overdue</a></li>
+                        <li><a href="#"><i class="fas fa-calendar"></i> Calendar</a></li>
+                    </ul>
+                </div>
+                
+                <div class="menu-section">
+                    <h3>Lists</h3>
+                    <ul id="lists-container">
+                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-shopping-cart"></i> Groceries</a></li>
+                        <li><a href="#"><i class="fas fa-briefcase"></i> Work</a></li>
+                        <li><a href="#"><i class="fas fa-birthday-cake"></i> Birthdays</a></li>
+                        <li><a href="#"><i class="fas fa-film"></i> Movies</a></li>
+                    </ul>
+                    <button id="add-list-btn" class="btn-text"><i class="fas fa-plus"></i> New List</button>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button id="import-btn" class="btn-text"><i class="fas fa-file-import"></i> Import</button>
+                <button id="export-btn" class="btn-text"><i class="fas fa-file-export"></i> Export</button>
+                <input type="file" id="file-input" accept=".json" style="display: none;">
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h2 id="current-view">All Tasks</h2>
+                <div class="header-actions">
+                    <button id="quick-add-btn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Quick Add
+                    </button>
+                </div>
+            </header>
+
+            <!-- Task List -->
+            <div class="task-list-container">
+                <div class="task-filters">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search tasks...">
+                    </div>
+                    <div class="filter-options">
+                        <select id="sort-select">
+                            <option value="date">Sort by Date</option>
+                            <option value="priority">Sort by Priority</option>
+                            <option value="name">Sort by Name</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="task-list">
+                    <!-- Tasks will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Task Stats -->
+            <div class="task-stats">
+                <div class="stat-card">
+                    <h3>Total Tasks</h3>
+                    <span id="total-tasks">0</span>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed</h3>
+                    <span id="completed-tasks">0</span>
+                </div>
+                <div class="stat-card">
+                    <h3>Overdue</h3>
+                    <span id="overdue-tasks">0</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Task Detail Modal -->
+        <div id="task-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Task Details</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="task-title">Title</label>
+                        <input type="text" id="task-title" placeholder="Task title">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <div class="priority-options">
+                            <button class="priority-btn low" data-priority="low">Low</button>
+                            <button class="priority-btn medium active" data-priority="medium">Medium</button>
+                            <button class="priority-btn high" data-priority="high">High</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <div class="date-options">
+                            <input type="date" id="due-date">
+                            <input type="time" id="due-time">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Reminder</label>
+                        <div class="reminder-options">
+                            <input type="datetime-local" id="reminder">
+                            <button id="set-snooze" class="btn-text">Set auto snooze</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Repeat</label>
+                        <div class="repeat-options">
+                            <select id="repeat-frequency">
+                                <option value="none">Does not repeat</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Subtasks</label>
+                        <div id="subtasks-container">
+                            <!-- Subtasks will be added here -->
+                        </div>
+                        <button id="add-subtask" class="btn-text"><i class="fas fa-plus"></i> Add subtask</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>List</label>
+                        <select id="task-list-select">
+                            <option value="home">Home</option>
+                            <option value="work">Work</option>
+                            <option value="groceries">Groceries</option>
+                            <option value="birthdays">Birthdays</option>
+                            <option value="movies">Movies</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="task-notes" placeholder="Add some notes!"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Attachments</label>
+                        <div id="attachments-container">
+                            <!-- Attachments will be shown here -->
+                        </div>
+                        <input type="file" id="file-upload" style="display: none;">
+                        <button id="add-attachment" class="btn-text"><i class="fas fa-paperclip"></i> Attach file</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancel-task" class="btn-secondary">Cancel</button>
+                    <button id="save-task" class="btn-primary">Save Task</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Add Panel -->
+        <div id="quick-add-panel" class="quick-add-panel">
+            <input type="text" placeholder="Add a new task..." id="quick-add-input">
+            <button id="quick-add-submit"><i class="fas fa-plus"></i></button>
+        </div>
+    </div>
+    <div class="footer-bottom">
+                    <p>&copy; 2025 TO DO LIST. All rights reserved.</p>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <span>•</span>
+                        <a href="#">Terms of Service</a>
+                        <span>•</span>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
+            </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
